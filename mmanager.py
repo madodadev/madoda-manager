@@ -1,17 +1,22 @@
+import json
+from pathlib import Path
+from datetime import datetime
+
 from mm_downloads.download import Download
 from mm_uploads.google_drive.upload import GdriveUpload
-import sys
 class MMangaer:
     def __init__(self):
-        self.m_contents = [{"download_url":"https://www.youtube.com/watch?v=z29nI8RQV0U","gdrive_upload_times":5, "post_id":22, "tags":{"artist": "Chris Brown", "title":"Don't Judge Me"} }]
+        self.dumps_folder = Path(__file__).parent / "dumps"
     
-    
-    def download_and_upload_to_gdrive(self):
-        self.m_contents = Download(self.m_contents).main()
-        self.m_contents = GdriveUpload(self.m_contents).mp3()
-        return self.m_contents
+    def download_and_upload_to_gdrive(self, m_contents):
+        m_contents = Download(m_contents).main()
+        m_contents = GdriveUpload(m_contents).mp3()
+        m_contents_dump_file = self.dumps_folder / str(datetime.now().strftime("%Y_%m_%d.%H.%M.%S.json"))
+        m_contents_dump_file.write_text(json.dumps(m_contents))
+        return m_contents, str(m_contents_dump_file.absolute())
 
 
 if __name__ == "__main__":
     mm = MMangaer()
+    m_contents = [{"download_url":"https://www.youtube.com/watch?v=z29nI8RQV0U","gdrive_upload_times":5, "post_id":22, "tags":{"artist": "Chris Brown", "title":"Don't Judge Me"} }]
     print(mm.download_and_upload_to_gdrive())

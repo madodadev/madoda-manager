@@ -38,14 +38,20 @@ class Download:
         if tags.get("artist") and tags.get("title"):
             return tags.get("artist") +" - "+ tags.get("title")
         return False
-    
+
+
     def getOutputName(self, content):
+        filename = content.get("filename")
         tags = content.get("tags")
-        if tags:
+        if filename:
+            return Path(str(self.save_folder)) /  Path(str(filename))
+        elif tags:
             name = self.getNameByTags(tags)
             if name:
                 return Path(str(self.save_folder)) /  Path(str(name))
+        
         return False
+
 
     def youtubeDl(self, m_content):
         index, content = m_content

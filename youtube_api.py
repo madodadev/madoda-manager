@@ -120,7 +120,7 @@ def oauth2callback():
   #              credentials in a persistent database instead.
   credentials = flow.credentials
   flask.session['credentials'] = credentials_to_dict(credentials)
-
+  print(credentials_to_dict(credentials))
   return flask.redirect(flask.url_for('test_api_request'))
 
 

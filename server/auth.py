@@ -16,5 +16,3 @@ def auth(key):
             return True
 
     return False
-
-print( auth("key") )
