@@ -19,7 +19,7 @@ def main():
 class Setup():
     def __init__(self):
         self.main_path = Path(__file__).parent.absolute()
-        self.main_conf_path = self.main_path / "assets/mainb_conf.json"
+        self.main_conf_path = self.main_path / "assets/main_conf.json"
 
         if not self.main_conf_path.is_file():
             conf = {"global":{"main_path":str(self.main_conf_path)}}

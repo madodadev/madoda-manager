@@ -8,7 +8,7 @@ def auth(key):
         main_path = Path(__file__).parent.parent.absolute()
         print(main_path)
     
-    conf_path =  main_path / "assets/mainb_conf.json" 
+    conf_path =  main_path / "assets/main_conf.json" 
     conf = json.loads(conf_path.read_text())
     auth_conf = conf.get("auth", 0)
     if auth_conf:
