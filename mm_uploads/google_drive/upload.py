@@ -29,7 +29,7 @@ class GdriveUpload(Gdive):
 
 
     def __upload_mp3_multi_temes(self, file_name, parent_id="root", n=6):
-        new_file_id = []
+        gdrive_ids = []
         if str(file_name).endswith(".mp3"):
             for num in range(n):
                 file_metadata = {
@@ -38,11 +38,11 @@ class GdriveUpload(Gdive):
                 }
                 media = MediaFileUpload(str(file_name), mimetype='audio/mp3')
                 Dfile = self.service.files().create(body=file_metadata, media_body=media, fields='id').execute()
-                new_file_id.append(Dfile.get('id'))
+                gdrive_ids.append(Dfile.get('id'))
 
-            self.new_files_id.setdefault(str(file_name), new_file_id)
+            # self.new_files_id.setdefault(str(file_name), gdrive_ids)
 
-            return self.new_files_id
+            return gdrive_ids
         else:
             return "error: not a mp3 file"
 
@@ -123,7 +123,7 @@ class GdriveUpload(Gdive):
                 if not folders: folders = ("unknown", filename.stem)
                 gdrive_folder_id = FolderManager(self.service).create(folders)
                 gdrive_ids = self.__upload_mp3_multi_temes(filename, gdrive_folder_id, gdrive_upload_times)
-                self.m_contents[index].setdefault("gdrive_ids", gdrive_ids)
+                self.m_contents[index]["gdrive_ids"] =  gdrive_ids
         
         return self.m_contents
                
