@@ -21,7 +21,7 @@ class YoutubeDownload:
             try:
                 ydl_opts = {
                 'format': 'bestaudio/best',
-                'outtmpl': str(self.save_folder)+'/'+title+'.%(ext)s',
+                'outtmpl': str(self.save_folder)+'/'+str(title)+'.%(ext)s',
                 'postprocessors': [{
                     'key': 'FFmpegExtractAudio',
                     'preferredcodec': 'mp3',
