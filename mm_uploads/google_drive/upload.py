@@ -106,8 +106,8 @@ class GdriveUpload(Gdive):
             main_folder = m_content_tags.get("artist")
             sec_folder = m_content_tags.get("title")
             return (main_folder, sec_folder)
-        else:
-            return ("unknown")
+        
+        return False
         
 
 
@@ -120,6 +120,7 @@ class GdriveUpload(Gdive):
                    if not self.sm.build_new_gdrive_service(filename, gdrive_upload_times):
                        continue
                 folders = self.get_folders_name_by_m_content_tags(content.get("tags", {}))
+                if not folders: folders = ("unknown", filename.stem)
                 gdrive_folder_id = FolderManager(self.service).create(folders)
                 gdrive_ids = self.__upload_mp3_multi_temes(filename, gdrive_folder_id, gdrive_upload_times)
                 self.m_contents[index].setdefault("gdrive_ids", gdrive_ids)
