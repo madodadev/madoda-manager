@@ -41,14 +41,14 @@ class Download:
 
 
     def getOutputName(self, content):
-        filename = content.get("filename")
+        filename = content.get("save_file_as")
         tags = content.get("tags")
         if filename:
-            return Path(str(self.save_folder)) /  Path(str(filename))
+            return Path(str(filename))
         elif tags:
             name = self.getNameByTags(tags)
             if name:
-                return Path(str(self.save_folder)) /  Path(str(name))
+                return Path(str(name))
         
         return False
 
@@ -56,7 +56,7 @@ class Download:
     def youtubeDl(self, m_content):
         index, content = m_content
         download_url = content.get("download_url")
-        yt_download = YoutubeDownload()
+        yt_download = YoutubeDownload(self.save_folder)
         output_name = self.getOutputName(content)
         filename = yt_download.mp3(download_url, output_name)
         self.m_contents[index]["filename"] = str(filename)
@@ -79,13 +79,4 @@ if __name__ == "__main__":
     content_links = [{"tags":{"artist": "zd", "title":"tb"}, "post_id": 21, "download_url":"https://www.youtube.com/voikvjo"},
         {"artist": "jry", "title":"nju", "gdrive_upload_times":8, "filename":"X:\\workspace\\madoda-manager\\server.py" ,"post_id": 21, "download_links":["youtube.com/hgkjyuy"]}]
     dw = Download(content_links)
-    # print( dw.getUrlType(" https://www.Youtube.com/") )
-    # print(content_links[0], "\n")
-    # for index, x in enumerate(content_links):
-    #     print(x, index)
     print(dw.m_contents, "\n\n")
-    dw.main()
-    print("\n\n", dw.m_contents)
-
-    # Path("X:\\workspace\\madoda-manager\\server\lm").mkdir(False)
-    print(Path("X:\\workspace\\madoda-manager\\"))
