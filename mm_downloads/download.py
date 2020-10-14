@@ -1,7 +1,9 @@
 from pathlib import Path
 from datetime import datetime
+import os.path
+import urllib.request
 
-from .youtube import YoutubeDownload
+from youtube import YoutubeDownload
 class Download:
     def __init__(self, m_content):
         self.m_contents = m_content
@@ -18,10 +20,13 @@ class Download:
 
     def getUrlType(self, url):
         url = str(url).lower().replace(" ", "")
-        sites = {"youtube":"https://www.youtube.com/"}
+        sites = {"youtube":"https://www.youtube.com/", "gdrive":"https://docs.google.com/uc?export=download&id="}
         for index, site in sites.items():
             if url.startswith(site.lower()):
                 return index
+            
+            if url.endswith(".mp3"):
+                return "direct_url"
         
         return False
 
@@ -61,7 +66,20 @@ class Download:
         filename = yt_download.mp3(download_url, output_name)
         self.m_contents[index]["filename"] = str(filename)
 
-    
+
+
+    def direct_urlDl(self, m_content):
+        index, content = m_content
+        download_url = content.get("download_url")
+        output_name = self.getOutputName(content)
+        filename = Path(str(self.save_folder)) / Path(str(output_name)).with_suffix(".mp3")
+        print("start download ", filename, download_url)
+        urllib.request.urlretrieve(download_url, filename)
+        if(filename.is_file()):
+            self.m_contents[index]["filename"] = str(filename)
+
+
+
     def main(self):
         for index, content in enumerate(self.m_contents):
             filename = content.get("filename", False)
@@ -69,6 +87,8 @@ class Download:
                 download_from = self.getUrlType(content.get("download_url"))
                 if download_from == "youtube":
                    self.youtubeDl((index, content))
+                elif download_from in ["direct_url", "gdrive"]:
+                    self.direct_urlDl((index, content))
             else:
                 print("file {} exite".format(filename))
         
@@ -76,7 +96,7 @@ class Download:
             
 
 if __name__ == "__main__":
-    content_links = [{"tags":{"artist": "zd", "title":"tb"}, "post_id": 21, "download_url":"https://www.youtube.com/voikvjo"},
+    content_links = [{"tags":{"artist": "zd", "title":"tb"}, "post_id": 21, "download_url":"https://docs.google.com/uc?export=download&id=1XF77sbvixZG0kUNYApHDsruBGd6g5Pm1"},
         {"artist": "jry", "title":"nju", "gdrive_upload_times":8, "filename":"X:\\workspace\\madoda-manager\\server.py" ,"post_id": 21, "download_links":["youtube.com/hgkjyuy"]}]
     dw = Download(content_links)
-    print(dw.m_contents, "\n\n")
+    print(dw.main())
