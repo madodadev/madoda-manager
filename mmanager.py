@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 from datetime import datetime
 
+from mm_tags.edit import EditTags
 from mm_downloads.download import Download
 from mm_uploads.google_drive.upload import GdriveUpload
 class MMangaer:
@@ -10,6 +11,7 @@ class MMangaer:
     
     def download_and_upload_to_gdrive(self, m_contents):
         m_contents = Download(m_contents).main()
+        EditTags(m_contents).edit()
         m_contents = GdriveUpload(m_contents).mp3()
         m_contents_dump_file = self.dumps_folder / str(datetime.now().strftime("%Y_%m_%d.%H.%M.%S.json"))
         m_contents_dump_file.write_text(json.dumps(m_contents))
