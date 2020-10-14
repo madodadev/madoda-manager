@@ -29,7 +29,7 @@ def down_up_gdrive():
     posts_failed = []
     for m_content in m_contents:
         if(m_content.get("gdrive_ids")):
-            posts.append({"post_id": m_content["post_id"], "gdrive_ids":m_content["gdrive_ids"]})
+            posts.append({"post_id": m_content["post_id"], "gdrive_ids":m_content["gdrive_ids"], "filename":m_content["filename"]})
         else:
             posts_failed.append(m_content)
     resp = {"posts": posts, "posts_failed": posts_failed, "mms_dump_file": dump_file}
