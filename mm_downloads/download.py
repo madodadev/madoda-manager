@@ -3,7 +3,7 @@ from datetime import datetime
 import os.path
 import urllib.request
 
-from youtube import YoutubeDownload
+from .youtube import YoutubeDownload
 class Download:
     def __init__(self, m_content):
         self.m_contents = m_content
