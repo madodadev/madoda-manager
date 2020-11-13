@@ -2,6 +2,7 @@ from pathlib import Path
 from datetime import datetime
 import os.path
 import urllib.request
+from random import randint
 
 from .youtube import YoutubeDownload
 class Download:
@@ -72,17 +73,25 @@ class Download:
         index, content = m_content
         download_url = content.get("download_url")
         output_name = self.getOutputName(content)
+        if not output_name: output_name = str(randint(0, 1000))+"_mddm_madodamusic"
         filename = Path(str(self.save_folder)) / Path(str(output_name)).with_suffix(".mp3")
         print("start download ", filename, download_url)
-        urllib.request.urlretrieve(download_url, filename)
-        if(filename.is_file()):
-            self.m_contents[index]["filename"] = str(filename)
+        for n in range(3):
+            try:
+                urllib.request.urlretrieve(download_url, filename)
+                if(filename.is_file()):
+                    self.m_contents[index]["filename"] = str(filename)
+                    break
+            except:
+                print(str(n)+" [ERROR] download_direct_url", filename)
+            
+        
 
 
 
     def main(self):
         for index, content in enumerate(self.m_contents):
-            filename = content.get("filename", False)
+            filename = content.get("filename", "")
             if not self.isFileExsite(filename):
                 download_from = self.getUrlType(content.get("download_url"))
                 if download_from == "youtube":
@@ -96,7 +105,5 @@ class Download:
             
 
 if __name__ == "__main__":
-    content_links = [{"tags":{"artist": "zd", "title":"tb"}, "post_id": 21, "download_url":"https://docs.google.com/uc?export=download&id=1XF77sbvixZG0kUNYApHDsruBGd6g5Pm1"},
-        {"artist": "jry", "title":"nju", "gdrive_upload_times":8, "filename":"X:\\workspace\\madoda-manager\\server.py" ,"post_id": 21, "download_links":["youtube.com/hgkjyuy"]}]
-    dw = Download(content_links)
-    print(dw.main())
+    m_contents = [{"download_url":"https://docs.google.com/uc?export=download&id=1PkvhZbvZdWZIUHKuC8ms7-A4ujwWlaE"}, {"download_url": "https://www.youtube.com/watch?v=hX_rPII0tY"}]
+    m_contents = Download(m_contents).main()
