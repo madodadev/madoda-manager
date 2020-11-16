@@ -4,12 +4,14 @@ import os
 from pathlib import Path
 import flask
 import requests
+import time
+import random
 
 import google.oauth2.credentials
 import google_auth_oauthlib.flow
 import googleapiclient.discovery
 
-from apiclient.http import MediaFileUpload
+from apiclient.http import MediaFileUpload, HttpError
 
 
 # This variable specifies the name of a file that contains the OAuth 2.0
@@ -18,6 +20,7 @@ CLIENT_SECRETS_FILE = "___mm_ysf.json"
 
 # This OAuth 2.0 access scope allows for full read/write access to the
 # authenticated user's account and requires requests to use an SSL connection.
+# SCOPES = ['https://www.googleapis.com/auth/youtube.force-ssl']
 SCOPES = ['https://www.googleapis.com/auth/youtube.force-ssl']
 API_SERVICE_NAME = 'youtube'
 API_VERSION = 'v3'
@@ -186,6 +189,8 @@ def resumable_upload(insert_request):
   response = None
   error = None
   retry = 0
+  RETRIABLE_STATUS_CODES = [500]
+  MAX_RETRIES = 3
   while response is None:
     try:
       print ("Uploading file...")
@@ -201,8 +206,8 @@ def resumable_upload(insert_request):
                                                              e.content)
       else:
         raise
-    except RETRIABLE_EXCEPTIONS as e:
-      error = "A retriable error occurred: %s" % e
+    except:
+      error = "A retriable error occurred:"
 
     if error is not None:
       print (error)

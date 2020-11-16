@@ -117,8 +117,11 @@ class GdriveUpload(Gdive):
             if Path(filename).exists() and filename:
                 gdrive_upload_times = int(content.get("gdrive_upload_times", 6))
                 if not self.gdrive_have_space_to_upload_file(self.service, filename, gdrive_upload_times):
-                   if not self.sm.build_new_gdrive_service(filename, gdrive_upload_times):
-                       continue
+                    service = self.sm.build_new_gdrive_service(filename, gdrive_upload_times)
+                    if not service:
+                        continue
+                    self.service = service
+        
                 folders = self.get_folders_name_by_m_content_tags(content.get("tags", {}))
                 if not folders: folders = ("unknown", filename.stem)
                 gdrive_folder_id = FolderManager(self.service).create(folders)

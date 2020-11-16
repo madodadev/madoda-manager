@@ -126,13 +126,16 @@ class FolderManager(Gdive):
 
 
 
-class ServiceManager():
+class ServiceManager(Gdive):
     def __init__(self):
+        super().__init__()
         self.__accounts_manager = AccountsManager()
         self.__credential_file = self.__accounts_manager.getCredFile()
+        self.SCOPES = ['https://www.googleapis.com/auth/drive']
 
 
     def build_gdrive_service(self, SCOPES):
+        self.SCOPES = SCOPES
         self.auth = Auth(SCOPES, self.__credential_file)
         self.creds = self.auth.getCreds()
 
@@ -144,17 +147,17 @@ class ServiceManager():
     def build_new_gdrive_service(self, filename,  gdrive_upload_times):
         credential_file_with_no_space = [self.__credential_file]
         while True:
-            self.__credential_file = self.accounts_manager.getCredFile(credential_file_with_no_space)
+            self.__credential_file = self.__accounts_manager.getCredFile(credential_file_with_no_space)
             if not self.__credential_file:
                 return False
-            
-            self.creds = Auth(self.SCOPES, self.__credential_file).getCreds()
-            self.service = build('drive', 'v3', credentials=self.creds)
-            
+
+            creds = Auth(self.SCOPES, self.__credential_file).getCreds()
+            self.service = build('drive', 'v3', credentials=creds)
+          
             if self.gdrive_have_space_to_upload_file(self.service, filename, gdrive_upload_times):
                 return self.service
             else:
-                credential_file_with_no_space.append[self.__credential_file]
+                credential_file_with_no_space.append(self.__credential_file)
 
     @property
     def credential_file(self):
