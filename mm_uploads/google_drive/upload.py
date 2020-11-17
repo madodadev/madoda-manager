@@ -113,8 +113,8 @@ class GdriveUpload(Gdive):
 
     def mp3(self):
         for index, content in enumerate(self.m_contents):
-            filename = Path(content.get("filename", 0))
-            if Path(filename).exists() and filename:
+            filename = Path(str(content.get("filename")))
+            if Path(filename).is_file() and filename:
                 gdrive_upload_times = int(content.get("gdrive_upload_times", 6))
                 if not self.gdrive_have_space_to_upload_file(self.service, filename, gdrive_upload_times):
                     service = self.sm.build_new_gdrive_service(filename, gdrive_upload_times)
