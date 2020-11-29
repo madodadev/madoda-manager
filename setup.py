@@ -11,8 +11,11 @@ def main():
     api_keys = ApiKeysConf()
     keys = api_keys.main()
     
+    youtube_conf = YoutubeConf().main()
+
     print("","="*10+"| google drive conf |"+"="*20,gdrive_conf, sep="\n", end="\n\n")
     print("","="*10+"| Auth conf |"+"="*20,keys, sep="\n", end="\n\n")
+    print("","="*10+"| Youtube Conf |"+"="*20,youtube_conf, sep="\n", end="\n\n")
     os.environ["mm_main_path"] = str(Path(__file__).absolute())
 
 
@@ -73,7 +76,7 @@ class ApiKeysConf(Setup):
     def main(self):
         key = self.__generate_key()
         self.set_keys(key)
-        api_keys = self.get_keys()
+        # api_keys = self.get_keys()
         self.conf["auth"] = self.auth_conf
         self.main_conf_path.write_text( json.dumps(self.conf) )
         return self.auth_conf
@@ -99,6 +102,66 @@ class ApiKeysConf(Setup):
         self.auth_conf["api_keys"] = api_keys
     
 
+
+class YoutubeConf(Setup):
+    def __init__(self):
+        super().__init__()
+        self.conf = json.loads( self.main_conf_path.read_text() )
+        self.youtube_conf = self.conf.get("youtube", {})
+        self.youtube_apps = self.youtube_conf.get("apps", {})
+    
+    def main(self):
+        print("\n","=" * 20, "\tYoutube Gonf", "=" * 30,sep="\n", end="\n\n")
+        self.get_apps_credentials()
+        self.youtube_conf["apps"] = self.youtube_apps
+        self.conf["youtube"] = self.youtube_conf
+        self.main_conf_path.write_text( json.dumps(self.conf) )
+        return self.youtube_conf
+
+    
+    def get_apps_credentials(self):
+        while True:
+            app_name = self.get_app_name()
+            if app_name:
+                oauth_client_id = self.get_oauth_client_id()
+                if oauth_client_id:
+                    self.youtube_apps[app_name]["OAuth_client_ID"] = oauth_client_id
+            
+            res = input("Do you want to add another app (Y/n): ")
+            if res in ["no", "n"]:
+                return 1
+            
+    
+    def get_app_name(self):
+        app_name = input("Youtube App Name: ")
+        if not app_name in self.youtube_apps.keys():
+            self.youtube_apps[app_name] = {}
+            return app_name
+        
+        if not self.youtube_apps[app_name].get("OAuth_client_ID"):
+            return app_name    
+        
+        res = input("App Name allreday have OAuth2.0 Client ID [DO YOU WANT TO CHANGE] (y/N)")
+        if res.lower() in ["yes", "y"]:
+            return app_name
+        
+        return False
+    
+
+    def get_oauth_client_id(self):
+        while True:
+            oauth_client_id_text =  input("Insert OAuth2.0 Client ID in JSON:\n")
+            if oauth_client_id_text.lower() in ["x", "cancel"]:
+                return False
+            try:
+                oauth_client_id = json.loads(oauth_client_id_text)
+                return oauth_client_id
+            except:
+                print("Error check JSON Format or type X or cancel to cancel\n ")
+
+                
+
+            
 
 if __name__ == "__main__":
     main()

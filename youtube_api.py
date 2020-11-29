@@ -43,7 +43,7 @@ youtube = auth()
 # print(response)
 data = {
     "snippet" : {
-        "title": "new v3 02",
+        "title": "new v3 04",
         "description": "madoda youtube upload",
         "tags": ["madoda", "2020"],
         "categoryId": "20"
