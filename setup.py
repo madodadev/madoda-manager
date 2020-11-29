@@ -125,7 +125,11 @@ class YoutubeConf(Setup):
             if app_name:
                 oauth_client_id = self.get_oauth_client_id()
                 if oauth_client_id:
-                    self.youtube_apps[app_name]["OAuth_client_ID"] = oauth_client_id
+                    client_ids_dir = Path(str(self.main_path)) / "assets/youtube/apps/{}/client_ids".format(app_name)
+                    client_ids_dir.mkdir(parents = True, exist_ok=True)
+                    oauth_client_id_file = client_ids_dir / "client_secret.json"
+                    oauth_client_id_file.write_text(json.dumps(oauth_client_id))
+                    self.youtube_apps[app_name]["OAuth_client_ID"] = str(oauth_client_id_file.absolute())
             
             res = input("Do you want to add another app (Y/n): ")
             if res in ["no", "n"]:
