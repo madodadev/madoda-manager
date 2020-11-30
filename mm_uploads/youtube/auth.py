@@ -6,6 +6,8 @@ from datetime import datetime
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
+from googleapiclient.discovery import build
+
 from youtube import Youtube
 
 
@@ -22,7 +24,20 @@ class Auth(Youtube):
     
     def get_service(self, channel=None):
         self.yt_channel = channel
-        return self.get_acess_token()
+        for n in range(10):
+            token_file =  self.get_acess_token()
+            try:
+                if token_file and Path(str(token_file)).is_file():
+                    token_file = Path(str(token_file))
+                    creds = pickle.loads(token_file.read_bytes())
+                    if creds and creds.expired and creds.refresh_token:
+                        creds.refresh(Request())
+                    service = build("youtube", "v3", credentials = creds)
+                    return service        
+            except:
+                print(n, "Error Get Acess Token", token_file)
+        return False
+        
 
     
     def get_acess_token(self):
@@ -101,8 +116,16 @@ class Auth(Youtube):
 
 if __name__ == "__main__":
     auth = Auth()
-    print(auth.get_service())
-    
+    # auth.make_acess_token()
+    youtube = auth.get_service()
+    request = youtube.channels().list(
+        part="statistics",
+        id="UCC1JYsEKLRO5i3J-LhQOvSg"
+    )
+    response = request.execute()
+
+    print(response)
+
     
 
 
