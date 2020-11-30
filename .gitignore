@@ -18,5 +18,7 @@ venv.bak/
 *.mp3
 *.mp4
 *___mm_*
+*client_secret*
 *token*pickle*
 *conf.json
+*assets/youtube/

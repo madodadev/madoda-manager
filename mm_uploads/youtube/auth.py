@@ -1,21 +1,108 @@
 import pickle
+import random
 from pathlib import Path
+from datetime import datetime
 
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
-from .youtube import Youtube
+from youtube import Youtube
 
 
 class Auth(Youtube):
     def __init__(self):
         super().__init__()
-        self.client_secrets_file = "___mm_ysf.json"
         self.scope = "https://www.googleapis.com/auth/youtube"
+        self.youtube_apps = self.conf.get("apps", {})
+        self.yt_app_max_upload_per_day = 5
+        self.today = str(datetime.today().strftime("%d/%m/%Y"))
+        self.yt_channel = None
+        self.current_app = None
     
-    def __make_acess_token(self):
-        channels_mun = input("how many channels for each app: ")
+    
+    def get_service(self, channel=None):
+        self.yt_channel = channel
+        return self.get_acess_token()
+
+    
+    def get_acess_token(self):
+        for app, content in self.youtube_apps.items():
+            if not content.get("last_use"):
+                self.youtube_apps[app]["last_use"] = {"date": self.today, "upload_times":0 }
+                self.update_conf("apps", self.youtube_apps)
+                self.current_app = app
+                return self.get_token_from_app(app)
+
+            if not content["last_use"].get("date") == self.today:
+                self.youtube_apps[app]["last_use"] = {"date": self.today, "upload_times":0 }
+                self.update_conf("apps", self.youtube_apps)
+                self.current_app = app
+                return self.get_token_from_app(app)
+            
+            if int(content["last_use"].get("upload_times")) <= self.yt_app_max_upload_per_day:
+                self.current_app = app
+                return self.get_token_from_app(app)
         
+    
+    def get_token_from_app(self, app):
+        yt_cannels = self.youtube_apps[app]["channels"]
+        if self.yt_channel:
+            if self.yt_channel in yt_cannels.keys():
+                token_file_path =  yt_cannels[self.yt_channel].get("token_file_path")
+                if Path(str(token_file_path)).is_file():
+                    return token_file_path
+        else:
+            yt_cannels = {k:v for (k, v) in yt_cannels.items() if int(v.get("upload_random_videos", 0)) == 1}
+            while yt_cannels:
+                channel = random.choice(list(yt_cannels.keys()))
+                token_file_path =  yt_cannels[channel].get("token_file_path", "")
+                if Path(str(token_file_path)).is_file():
+                    return token_file_path
+                
+                yt_cannels.pop(channel)
+            
+        
+        return False
+
+    
+    def make_acess_token(self):
+        channels_mun = int(input("how many channels for each app: "))
+        for index, conetnt in self.youtube_apps.items():
+            if conetnt.get("OAuth_client_ID"):
+                youtube_channels = conetnt.get("channels", {})
+                for num in range(channels_mun):
+                    channel_name = input("The {}o Channel Name you want to connect with {}: ".format(num + 1, index))
+                    if channel_name not in youtube_channels.keys():youtube_channels[channel_name] = {}
+                    client_secrets_file = conetnt.get("OAuth_client_ID")
+                    flow = InstalledAppFlow.from_client_secrets_file(
+                            client_secrets_file, self.scope)
+        
+                    creds = flow.run_console()
+                    tokens_dir = self.main_youtube_path / "apps" / str(index) / "tokens"
+                    tokens_dir.mkdir(parents = True, exist_ok = True)
+                    token_file_path = tokens_dir / str(channel_name+"_token.pickle")
+                    with open( token_file_path, 'wb') as token:
+                        pickle.dump(creds, token)
+                    
+                    youtube_channels[channel_name]["token_file_path"] = str(token_file_path.absolute())
+
+                    res = input("upload random videos de this channel (Y/n)")
+                    if res in ["no", "n"]:
+                        youtube_channels[channel_name]["upload_random_videos"] = 0
+                    else:
+                        youtube_channels[channel_name]["upload_random_videos"] = 1
+
+
+                conetnt["channels"] = youtube_channels  
+                self.youtube_apps[index] = conetnt
+                self.update_conf("apps", self.youtube_apps)
+
+
+
+if __name__ == "__main__":
+    auth = Auth()
+    print(auth.get_service())
+    
     
 
 
