@@ -14,7 +14,7 @@ from youtube import Youtube
 class Auth(Youtube):
     def __init__(self):
         super().__init__()
-        self.scope = "https://www.googleapis.com/auth/youtube"
+        self.scope = ["https://www.googleapis.com/auth/youtube"]
         self.youtube_apps = self.conf.get("apps", {})
         self.yt_app_max_upload_per_day = 5
         self.today = str(datetime.today().strftime("%d/%m/%Y"))
@@ -79,6 +79,11 @@ class Auth(Youtube):
         
         return False
 
+    
+    def update_app_upload_times(self):
+        self.youtube_apps[self.current_app]["last_use"]["date"] = self.today
+        self.youtube_apps[self.current_app]["last_use"]["upload_times"] +=  1
+        self.update_conf("apps", self.youtube_apps)
     
     def make_acess_token(self):
         channels_mun = int(input("how many channels for each app: "))
