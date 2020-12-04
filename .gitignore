@@ -17,8 +17,12 @@ venv.bak/
 #madoda manager
 *.mp3
 *.mp4
+*.jpg
 *___mm_*
 *client_secret*
 *token*pickle*
 *conf.json
 *assets/youtube/
+#madoda manager  not igonore
+!mm_default.jpg
+!mm_tags/image.jpg
