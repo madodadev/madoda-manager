@@ -3,6 +3,7 @@ from pathlib import Path
 import json
 import os
 
+from mm_uploads.youtube.auth import YoutubeAuth
 def main():
     print("\n","=" * 20, "\tMADODA MANAGER GONF", "=" * 30,sep="\n", end="\n\n")
     gdrive = ConfigGdrive()
@@ -116,6 +117,12 @@ class YoutubeConf(Setup):
         self.youtube_conf["apps"] = self.youtube_apps
         self.conf["youtube"] = self.youtube_conf
         self.main_conf_path.write_text( json.dumps(self.conf) )
+        print("Do manuel make acess tokens run make_acess_token() in youtube.auth.py")
+        resp = input("Do you want to make acess token NOW (Y/n): ")
+        if resp.lower() not in ["n", "no"]:
+            yt_auth = YoutubeAuth()
+            yt_auth.make_acess_token()
+
         return self.youtube_conf
 
     
@@ -138,6 +145,9 @@ class YoutubeConf(Setup):
     
     def get_app_name(self):
         app_name = input("Youtube App Name: ")
+        if not app_name:
+            return
+            
         if not app_name in self.youtube_apps.keys():
             self.youtube_apps[app_name] = {}
             return app_name
