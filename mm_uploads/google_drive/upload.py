@@ -113,6 +113,7 @@ class GdriveUpload(Gdive):
 
     def mp3(self):
         for index, content in enumerate(self.m_contents):
+            if not content.get("upload_to_gdrive",1):continue
             filename = Path(str(content.get("filename")))
             if Path(filename).is_file() and filename:
                 gdrive_upload_times = int(content.get("gdrive_upload_times", 6))
@@ -133,4 +134,4 @@ class GdriveUpload(Gdive):
     
         
 if __name__ == "__main__":
-    up = GdriveUpload()
+    up = GdriveUpload([{}])
