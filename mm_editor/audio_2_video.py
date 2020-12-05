@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 from datetime import datetime
 
-from make_image import MakeImage
+from .make_image import MakeImage
 class Audio2Video:
     def __init__(self, m_contents):
         self.m_contents = m_contents
@@ -27,7 +27,7 @@ class Audio2Video:
             video_output = video_output.with_suffix(".mp4")
             
             if video_output.is_file():
-                self.m_contents[index]["video_filename"] = video_output
+                self.m_contents[index]["video_filename"] = str(video_output.absolute())
                 continue
 
             img_src = self.mkimg.get_image_src(m_content)
@@ -43,7 +43,7 @@ class Audio2Video:
                 
 
 if __name__ == "__main__":
-    m_contents = [{"filename":"music.mp3", "upload_to_youtube":True}]
+    m_contents = [{"filename":"music.mp3", "upload_to_youtube":1}]
     a2v = Audio2Video(m_contents).main()
     print(a2v)
 
