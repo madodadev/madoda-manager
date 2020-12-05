@@ -24,7 +24,7 @@ def down_up_gdrive():
     if not auth(req_content.get("api_key")):return Response("error: auth error", 400)
 
     m_contents = req_content.get("m_contents", 0)
-    m_contents, dump_file = manager.download_and_upload_to_gdrive(m_contents)
+    m_contents, dump_file = manager.main(m_contents)
     posts = []
     posts_failed = []
     for m_content in m_contents:

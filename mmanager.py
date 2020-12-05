@@ -15,7 +15,7 @@ class MMangaer:
         self.dumps_folder = Path(__file__).parent / "dumps"
         self.m_contents = []
     
-    def download_and_upload_to_gdrive(self, m_contents):
+    def main(self, m_contents):
         m_contents = Download(m_contents).main()
         EditTags(m_contents).edit()
         m_contents = GdriveUpload(m_contents).mp3()
