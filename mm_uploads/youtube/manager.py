@@ -2,12 +2,13 @@ import json
 from pathlib import Path
 from datetime import datetime
 
-from youtube import Youtube
+from .youtube import Youtube
 
 class UploadList(Youtube):
     def __init__(self):
         super().__init__()
         self.__videos_to_upload_file = Path(str(self.main_youtube_path)) / str("videos_to_upload.json")
+        self.__videos_uploaded = Path(str(self.main_youtube_path)) / str("videos_uploaded.json")
         self.__videos_to_upload = self.get_videos_to_upload()
     
    
@@ -53,6 +54,23 @@ class UploadList(Youtube):
             if str( video.get("video_filename", "") ) == str(video_path):
                 self.__videos_to_upload.pop(index)
         self.__videos_to_upload_file.write_text(json.dumps(self.__videos_to_upload))
+    
+    
+    def add_to_complete_list(self, post_id, content): 
+        if not self.__videos_uploaded.is_file():
+            self.__videos_uploaded.write_text(json.dumps({}))
+        
+        try:
+            videos_uploaded_text = self.__videos_uploaded.read_text()
+            videos_uploaded = json.loads(videos_uploaded_text)
+            videos_uploaded[post_id] = content
+            self.__videos_uploaded.write_text(json.dumps(videos_uploaded))
+        except:
+            pass
+       
+            
+
+
     
     
 

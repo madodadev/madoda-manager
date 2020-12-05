@@ -7,11 +7,13 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
 from googleapiclient.discovery import build
+if __name__ == "__main__":
+    from youtube import Youtube
+else:
+    from .youtube import Youtube
 
-from youtube import Youtube
 
-
-class Auth(Youtube):
+class YoutubeAuth(Youtube):
     def __init__(self):
         super().__init__()
         self.scope = ["https://www.googleapis.com/auth/youtube"]
@@ -120,7 +122,7 @@ class Auth(Youtube):
 
 
 if __name__ == "__main__":
-    auth = Auth()
+    auth = YoutubeAuth()
     # auth.make_acess_token()
     youtube = auth.get_service()
     request = youtube.channels().list(
