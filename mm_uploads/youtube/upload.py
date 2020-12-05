@@ -1,16 +1,16 @@
 import json
 from pathlib import Path
 
-from manager import UploadList, videoData
-from youtube import Youtube
-from auth import Auth
+from .manager import UploadList, videoData
+from .youtube import Youtube
+from .auth import YoutubeAuth
 
 from googleapiclient.discovery import MediaFileUpload
 
-class Upload(Youtube):
+class YoutubeUpload(Youtube):
     def __init__(self):
         super().__init__()
-        self.yt_auth = Auth()
+        self.yt_auth = YoutubeAuth()
         self.upload_list_manager = UploadList()
         self.video_data_manager = videoData()
 
@@ -24,8 +24,8 @@ class Upload(Youtube):
             self.upload_list_manager.add_videos_to_upload_list(f_m_contents)
         
         m_contents = self.upload_list_manager.get_videos_to_upload()
-        resp = self.upload(m_contents)
-        return resp
+        self.upload(m_contents)
+
     
 
     def upload(self, m_contents):
@@ -38,6 +38,9 @@ class Upload(Youtube):
             if not music_file.is_file() or not music_file.suffix in [".webm", ".mp4"]:
                 continue
             yt_service = self.yt_auth.get_service()
+            if not yt_service:
+                continue
+            
             data = self.video_data_manager.get_data(m_content)
             insert_request = yt_service.videos().insert(
                 part=",".join(data.keys()),
@@ -46,13 +49,13 @@ class Upload(Youtube):
             )
 
             response = insert_request.execute()
-            # self.upload_list_manager.rm_video_from_upload_list(str(music_file.absolute()))
+            self.upload_list_manager.add_to_complete_list(m_content.get("post_id", str(music_file.absolute())), response)
+            self.upload_list_manager.rm_video_from_upload_list(str(music_file.absolute()))
             self.yt_auth.update_app_upload_times()
 
-            return response
 
 
 if __name__ == "__main__":
-    up = Upload()
-    m_contents = [{"tags":{"artist":"madoda", "title":"manager 2"},"permalink":"http://madodamusic.com/?p=5870", "video_filename":"vi.mp4", "youtube_z-index":22}]
+    up = YoutubeUpload()
+    m_contents = [{"tags":{"artist":"madoda", "title":"manager 2"},"post_id":2105, "permalink":"http://madodamusic.com/?p=5870", "video_filename":"vi.mp4", "youtube_z-index":22}]
     print("\n\n",up.main(m_contents))
