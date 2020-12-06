@@ -80,7 +80,12 @@ class videoData():
         self.td_year = datetime.today().year
 
     def get_data(self, m_content):
-        yt_title = self.get_title(m_content)+" | Download MP3"
+        title = self.get_title(m_content)
+        if len(title) > 60:
+            title = title[0:60] + "..."
+        
+        yt_title = title +" | Download MP3(madodamusic.com)"
+
         data = {
             "snippet" : {
                 "title": yt_title,
