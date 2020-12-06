@@ -33,7 +33,7 @@ class Audio2Video:
             img_src = self.mkimg.get_image_src(m_content)
             
             print("start making video", datetime.now())
-            cmd = '''ffmpeg -loop 1 -framerate 1 -i '{img_i}' -i '{audio_i}' -map 0:v -map 1:a -r 10 -vf "scale='iw-mod(iw,2)':'ih-mod(ih,2)',format=yuv420p" -movflags +faststart -shortest -fflags +shortest -max_interleave_delta 100M {video_O}'''.format(img_i=img_src, audio_i=filename, video_O=str(video_output.absolute()))
+            cmd = '''ffmpeg -loop 1 -framerate 1 -i '{img_i}' -i '{audio_i}' -map 0:v -map 1:a -r 10 -vf "scale='iw-mod(iw,2)':'ih-mod(ih,2)',format=yuv420p" -movflags +faststart -shortest -fflags +shortest -max_interleave_delta 100M '{video_O}' '''.format(img_i=img_src, audio_i=filename, video_O=str(video_output.absolute()))
             # return cmd
             res = os.system(cmd)
             if res == 0:self.m_contents[index]["video_filename"] = str(video_output.absolute())
