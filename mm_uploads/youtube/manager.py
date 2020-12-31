@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 from datetime import datetime
 
-from youtube import Youtube
+from .youtube import Youtube
 
 class UploadList(Youtube):
     def __init__(self):
