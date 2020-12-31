@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 from datetime import datetime
 
-from .youtube import Youtube
+from youtube import Youtube
 
 class UploadList(Youtube):
     def __init__(self):
@@ -84,7 +84,7 @@ class videoData():
         if len(title) > 60:
             title = title[0:60] + "..."
         
-        yt_title = title +" | Download MP3(madodamusic.com)"
+        yt_title = title +" | Download MP3"
 
         data = {
             "snippet" : {
@@ -142,9 +142,7 @@ class videoData():
         tags = m_content.get("tags", {})
         yt_title = self.get_title(m_content)
         yt_c_title_1 = yt_title + " download mp3"
-        yt_c_title_2 = "Baixar " + yt_title
-        yt_c_title_3 = "descarregar" + yt_title
-        yt_tags = ["baixar musica", "download mp3", "descarregar musicas", yt_title, yt_c_title_1, yt_c_title_2, yt_c_title_3]
+        yt_tags = [yt_title, yt_c_title_1]
         artists = []
         if tags.get("artist"):
             artists.append(tags.get("artist"))
@@ -153,15 +151,10 @@ class videoData():
             artists = artists + tags.get("sec_artists")
         
         
-        for artist in artists:
-            yt_tags.append(artist)
-            yt_tags.append("baixar musicas de "+artist)
-            yt_tags.append("baixar musicas de "+artist+ " de " +str(self.td_year))
-            yt_tags.append(str(artist) + " download mp3")
-        
-        if tags.get("title"):
-            yt_tags.append(tags.get("title"))
-            yt_tags.append(tags.get("title")+" dwonload mp3")
+        for index, artist in enumerate(artists):
+            if index >= 3:break
+            if tags.get("title"):
+                yt_tags.append(artist+" "+tags.get("title")+" dwonload mp3")
         
         return yt_tags
 
@@ -181,5 +174,5 @@ if __name__ == "__main__":
     # print(res)
 
     vd = videoData()
-    m_content = {"permalink":"https://madodas/calema", "video_filename":"calema-sorte.mp4","tags":{"artist": "calema", "title":"sorte", "sec_artists":["lucas", "anita"]}}
+    m_content = {"permalink":"https://madodas/calema", "video_filename":"calema-sorte.mp4","tags":{"artist": "calema", "title":"sorte", "sec_artists":["lucas", "anita", "jose", "marcos"]}}
     print(vd.get_data(m_content))
