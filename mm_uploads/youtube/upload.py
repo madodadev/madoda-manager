@@ -41,14 +41,20 @@ class YoutubeUpload(Youtube):
             if not yt_service:
                 continue
             
-            data = self.video_data_manager.get_data(m_content)
-            insert_request = yt_service.videos().insert(
-                part=",".join(data.keys()),
-                body=data,
-                media_body=MediaFileUpload(str(music_file))
-            )
+            try:
+                data = self.video_data_manager.get_data(m_content)
+                insert_request = yt_service.videos().insert(
+                    part=",".join(data.keys()),
+                    body=data,
+                    media_body=MediaFileUpload(str(music_file))
+                )
 
-            response = insert_request.execute()
+                response = insert_request.execute()
+                print("youtube upload response: ",response)
+            except:
+                print("Error uploading to youtube", music_file, data)
+                continue
+            
             self.upload_list_manager.add_to_complete_list(m_content.get("post_id", str(music_file.absolute())), response)
             self.upload_list_manager.rm_video_from_upload_list(str(music_file.absolute()))
             self.yt_auth.update_app_upload_times()

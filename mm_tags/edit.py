@@ -81,9 +81,9 @@ class EditTags:
 
 
 if __name__ == "__main__":
-    content = [{'tags': {'Artist': 'zd', 'title': 'tb'}, 'post_id': 21, 'download_url': 'https://www.youtube.com/voikvjo', 'filename': 'X:\workspace\madoda-manager\musics\Dj Black Spygo - Só Tu (feat. Aurora Ferreira & Edgar Domingos).mp3'}, {'artist': 'jry', 'title': 'nju', 'filename': 'X:\\workspace\\madoda-manager\\server.py', 'post_id': 21, 'download_links': ['youtube.com/hgkjyuy']}]
+    content = [{'tags': {'Artist': 'Lobi', 'title': 'Zet'}, 'post_id': 21, 'filename': 'music.mp3'}]
     ed = EditTags(content)
     print( ed.edit() )
-    tags_data = content[0]["tags"]
-    tags_data = {str(index).lower():str(val) for index, val in tags_data.items()}
-    print(tags_data)
+    # tags_data = content[0]["tags"]
+    # tags_data = {str(index).lower():str(val) for index, val in tags_data.items()}
+    # print(tags_data)

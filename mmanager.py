@@ -33,5 +33,5 @@ class MMangaer:
 
 if __name__ == "__main__":
     mm = MMangaer()
-    m_contents = [{"filename":"music.mp3", "upload_to_youtube":1, "tags":{"artist":"mdd", "title":"manager 3"},"post_id":3421, "permalink":"http://madodamusic.com/?p=5870"}]
-    mm.task_make_video_and_upload_2_youtube(m_contents)
+    m_contents = [{"post_id":"6636","download_url":"https://docs.google.com/uc?export=download&id=19z_daIlcKuDoSHjn3ZRiTzDaD-dbdg2x","permalink":"http://madodamusic.com/baixar-musica-de-mr-bow-only-you/","gdrive_upload_times":6,"tags":{"artist":"Mr bow","title":"Only You"},"youtube_z-index":0,"upload_to_gdrive":0,"upload_to_youtube":1,"save_as":"Mr bow - Only You", "filename":"music.mp3"}]
+    mm.main(m_contents)
