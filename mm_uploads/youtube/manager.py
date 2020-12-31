@@ -84,7 +84,7 @@ class videoData():
         if len(title) > 60:
             title = title[0:60] + "..."
         
-        yt_title = title +" | Download MP3"
+        yt_title = title +" | (#Download, #MP3)"
 
         data = {
             "snippet" : {
@@ -135,7 +135,7 @@ class videoData():
             desc += "\nTitle: "+tags.get("title")
 
 
-        desc += "\n\nmadoda music \nhttp://madodamusic.com/\n"
+        desc += "\n\n(#MDDM, #Download)\nmadoda music \nhttp://madodamusic.com/\n"
         return desc
     
     def get_tags(self, m_content):
