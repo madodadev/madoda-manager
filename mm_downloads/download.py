@@ -75,12 +75,17 @@ class Download:
         output_name = self.getOutputName(content)
         if not output_name: output_name = str(randint(0, 1000))+"_mddm_madodamusic"
         filename = Path(str(self.save_folder)) / Path(str(output_name)).with_suffix(".mp3")
+        if Path(str(filename)).is_file():
+            print("File Allradey downloaded", filename)
+            self.m_contents[index]["filename"] = str(filename.absolute())
+            return filename
+
         print("start download ", filename, download_url)
         for n in range(3):
             try:
                 urllib.request.urlretrieve(download_url, filename)
                 if(filename.is_file()):
-                    self.m_contents[index]["filename"] = str(filename)
+                    self.m_contents[index]["filename"] = str(filename.absolute())
                     break
             except:
                 print(str(n)+" [ERROR] download_direct_url", filename)
