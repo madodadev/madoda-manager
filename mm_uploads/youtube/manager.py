@@ -84,7 +84,7 @@ class videoData():
         if len(title) > 60:
             title = title[0:60] + "..."
         
-        yt_title = title +" | (#Download, #MP3)"
+        yt_title = title +" | Baixar MP3"
 
         data = {
             "snippet" : {
