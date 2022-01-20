@@ -135,7 +135,7 @@ class videoData():
             desc += "\nTitle: "+tags.get("title")
 
 
-        desc += "\n\n(#MDDM, #Download)\nmadoda music \nhttp://madodamusic.com/\n"
+        desc += "\n\nmadoda music \nhttp://madodamusic.com/\n"
         return desc
     
     def get_tags(self, m_content):
