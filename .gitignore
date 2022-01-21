@@ -22,7 +22,8 @@ venv.bak/
 *client_secret*
 *token*pickle*
 *conf.json
-*assets/youtube/
+assets/youtube/*
 #madoda manager  not igonore
 !mm_default.jpg
 !mm_tags/image.jpg
+!assets/youtube/credentials
