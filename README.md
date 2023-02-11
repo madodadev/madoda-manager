@@ -11,10 +11,11 @@ install all requirements
     ./assets/google_drive/service_accounts if service accounts 
 (you can use both but client_id has priority) 
 
-#### copy youtube credentials to
-    ./assets/youtube/credentials 
-(only client_id is acceptable)
-
+##RUN Setup Agent
+### The Setup Agent will ask for 
+#### Google Drive Folder ID to Sotre Musics and logs
+#### Client ID for Desktop For YOUTUBE OAuth 2.0 Auth
+##### Use more then one Client ID to pass Youtube Upload Limit
 > python3 setup.py
 
 #### copy api_key to the host app
