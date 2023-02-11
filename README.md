@@ -22,5 +22,9 @@ install all requirements
 After run Setup Agent Copy api_key to madoda manager WP_Plugin
 in settings page, for authentication
 
+## Install FFMPEG
+Install ffmpeg to convert mp3 to mp4 for youtube upload
+>sudo apt install ffmpeg
+
 ## run the app
 >python3 main.py
