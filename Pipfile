@@ -4,13 +4,16 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pylint = "*"
 
 [packages]
+flask = "*"
+youtube-dl = "*"
+eyed3 = "*"
 google-api-python-client = "*"
 google-auth-httplib2 = "*"
 google-auth-oauthlib = "*"
-eyed3 = "*"
-youtube-dl = "*"
+requests = "*"
 
 [requires]
-python_version = "3.6"
+python_version = "3.8"
