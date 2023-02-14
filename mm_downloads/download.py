@@ -1,7 +1,7 @@
 from pathlib import Path
 from datetime import datetime
 import os.path
-import urllib.request
+import requests
 from random import randint
 
 from .youtube import YoutubeDownload
@@ -86,7 +86,10 @@ class Download:
         print("start download ", filename, download_url)
         for n in range(3):
             try:
-                urllib.request.urlretrieve(download_url, filename)
+                data = requests.get(download_url, allow_redirects=True, stream=True)
+                if(data.headers.get('content-length')):
+                    with open(filename, 'wb')as file:
+                        file.write(data.content)
                 if(filename.is_file()):
                     self.m_contents[index]["filename"] = str(filename.absolute())
                     break
