@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-import youtube_dl
+import yt_dlp
 from pathlib import Path
 
 class YoutubeDownload:
@@ -29,7 +29,7 @@ class YoutubeDownload:
                 }]
                 }
                 
-                with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                     meta = ydl.extract_info(yt_url, download=True)
                     if title == "%(title)s":
                         return Path(self.save_folder) / Path(meta['title']).with_suffix(".mp3")
